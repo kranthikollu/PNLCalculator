@@ -1,27 +1,15 @@
+package com.omega.api.config;
 
-package com.omega.api;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 
-import org.glassfish.jersey.servlet.ServletContainer;
-import org.glassfish.jersey.servlet.ServletProperties;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.annotation.Bean;
+import com.omega.api.controller.PnlController;
 
-import com.omega.api.config.JerseyConfig;
-
-@SpringBootApplication(scanBasePackages = {"com.omega.api"})
-public class PnlCalculatorApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(PnlCalculatorApplication.class, args);
-	}
+public class JerseyConfig extends ResourceConfig{
 	
-	@Bean
-	public ServletRegistrationBean<ServletContainer> jerseyServlet() {
-		ServletRegistrationBean<ServletContainer> registration = new ServletRegistrationBean<ServletContainer>( new ServletContainer(), "/pnl/*");
-		registration.addInitParameter( ServletProperties.JAXRS_APPLICATION_CLASS, JerseyConfig.class.getName() );
-		return registration;
+	public JerseyConfig() {
+		register(RequestContextFilter.class);
+		register(PnlController.class);
 	}
-	
+
 }
