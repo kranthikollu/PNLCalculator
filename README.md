@@ -13,9 +13,9 @@ Note: If you see any issue in finding few jars, please double check the build pa
 3) Run PnlCalculator As Spring Boot Application in eclipse, the server will listen on default Tomcat port 8080
 
 sample request: open postman ( plugin) in chrome browser, use 
-url:  http://localhost:8080/pnl/calc
-type: POST
-Headers: Content-Type
+url:  http://localhost:8080/pnl/calc , 
+type: POST , 
+Headers: Content-Type : application/json, 
 Body: give the json request ( transactions in JSON)
 HIT SEND
 see output body in JSON format
