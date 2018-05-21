@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import com.omega.api.config.JerseyConfig;
 
 @SpringBootApplication(scanBasePackages = {"com.omega.api"})
+//set up spring boot
 public class PnlCalculatorApplication {
 
 	public static void main(String[] args) {
@@ -19,6 +20,7 @@ public class PnlCalculatorApplication {
 	
 	@Bean
 	public ServletRegistrationBean<ServletContainer> jerseyServlet() {
+		// Set up controller path
 		ServletRegistrationBean<ServletContainer> registration = new ServletRegistrationBean<ServletContainer>( new ServletContainer(), "/pnl/*");
 		registration.addInitParameter( ServletProperties.JAXRS_APPLICATION_CLASS, JerseyConfig.class.getName() );
 		return registration;
