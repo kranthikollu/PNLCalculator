@@ -25,6 +25,7 @@ public class PnlController {
 	@Produces("application/json")
     @Consumes("application/json")
 	@Path("/calc")
+	// Call calculate on pnlCalculatorService for /calc Path 
 	public List<PnlOutput> calculate(PnlInput pnlInput) {
 		List<PnlOutput> pnlOutputs = pnlCalculatorService.calculate(pnlInput);
 		return pnlOutputs;
