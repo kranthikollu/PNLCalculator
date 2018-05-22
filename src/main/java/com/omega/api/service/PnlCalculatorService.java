@@ -17,7 +17,7 @@ import com.omega.api.dto.Trade.TradeType;
 @Service
 public class PnlCalculatorService {
 	
-	/* PNL Calc Service, takes JSON input of transactions ( pre defined format) and calculates Cash, PNL & Holdings from JSON transactions
+	/* PNL Calc Service, takes JSON input of transactions ( pre defined json format) and calculates Cash, PNL & Holdings from JSON transactions
 	 returns pnl details in JSON format*/
 
 	public List<PnlOutput> calculate(PnlInput pnlInput) {
