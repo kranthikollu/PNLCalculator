@@ -1,0 +1,160 @@
+package com.omega.api.service;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+
+import com.omega.api.dto.Base;
+import com.omega.api.dto.PnlInput;
+import com.omega.api.dto.PnlOutput;
+import com.omega.api.dto.Trade;
+import com.omega.api.dto.Trade.TradeType;
+
+public class PnlCalculatorServiceTest {
+
+	@Test
+	public void testCalculate() {
+		PnlCalculatorService pnlCalculatorService = new PnlCalculatorService();
+		Double cash = 5000D;
+		Map<String, Integer> holdings = new HashMap<>();
+		holdings.put("STOCK-A", 0);
+		holdings.put("STOCK-B", 0);
+		Base base = new Base(cash, holdings);
+		
+		List<Trade> transactions = new ArrayList<>();
+		Trade trade1 = new Trade("STOCK-A",TradeType.Buy, 10, 10D, "2018-01-01");
+		Trade trade2 = new Trade("STOCK-B",TradeType.Buy, 20, 40D, "2018-01-11");
+		Trade trade3 = new Trade("STOCK-A",TradeType.Sell, 5, 15D, "2018-01-21");
+		Trade trade4 = new Trade("STOCK-A",TradeType.Buy, 5, 12D, "2018-03-04");
+		Trade trade5 = new Trade("STOCK-B",TradeType.Sell, 10, 30D, "2018-04-01");
+		Trade trade6 = new Trade("STOCK-A",TradeType.Sell, 10, 13D, "2018-04-21");
+		Trade trade7 = new Trade("STOCK-B",TradeType.Sell, 10, 20D, "2018-05-01");
+		transactions.add(trade1);
+		transactions.add(trade2);
+		transactions.add(trade3);
+		transactions.add(trade4);
+		transactions.add(trade5);
+		transactions.add(trade6);
+		transactions.add(trade7);
+		
+		PnlInput pnlInput = new PnlInput(base, transactions);
+		List<PnlOutput> output = pnlCalculatorService.calculate( pnlInput );
+		Map<String, Integer> holdings1 = new HashMap<>();
+		holdings1.put("STOCK-A", 10);
+		holdings1.put("STOCK-B", 0);
+		PnlOutput pnlOutput = new PnlOutput(4900D, 0D, holdings1);
+		assertEquals(pnlOutput, output.get(0));
+		
+		holdings1.put("STOCK-B", 20);
+		pnlOutput = new PnlOutput(4100D, 0D, holdings1);
+		assertEquals(pnlOutput, output.get(1));
+		
+		holdings1.put("STOCK-A", 5);
+		pnlOutput = new PnlOutput(4175D, 25D, holdings1);
+		assertEquals(pnlOutput, output.get(2));
+		
+		holdings1.put("STOCK-A", 10);
+		pnlOutput = new PnlOutput(4115D, 25D, holdings1);
+		assertEquals(pnlOutput, output.get(3));
+		
+		holdings1.put("STOCK-B", 10);
+		pnlOutput = new PnlOutput(4415D, -75D, holdings1);
+		assertEquals(pnlOutput, output.get(4));
+		
+		holdings1.put("STOCK-A", 0);
+		pnlOutput = new PnlOutput(4545D, -55D, holdings1);
+		assertEquals(pnlOutput, output.get(5));
+		
+		holdings1.put("STOCK-B", 0);
+		pnlOutput = new PnlOutput(4745D, -255D, holdings1);
+		assertEquals(pnlOutput, output.get(6));
+		
+	}
+	
+	@Test
+	public void testCalculateThreeHoldings() {
+		PnlCalculatorService pnlCalculatorService = new PnlCalculatorService();
+		Double cash = 150000D;
+		Map<String, Integer> holdings = new HashMap<>();
+		holdings.put("GOOGL", 0);
+		holdings.put("AMZN", 0);
+		holdings.put("AAPL", 0);
+		Base base = new Base(cash, holdings);
+		
+		List<Trade> transactions = new ArrayList<>();
+		Trade trade1 = new Trade("GOOGL",TradeType.Buy, 30, 1000D, "2018-01-01");
+		Trade trade2 = new Trade("GOOGL",TradeType.Buy, 10, 1100D, "2018-01-11");
+		Trade trade3 = new Trade("GOOGL",TradeType.Sell, 40, 1200D, "2018-01-21");
+		Trade trade4 = new Trade("AMZN",TradeType.Buy, 60, 1500D, "2018-03-04");
+		Trade trade5 = new Trade("AMZN",TradeType.Buy, 20, 1550D, "2018-04-01");
+		Trade trade6 = new Trade("AAPL",TradeType.Buy, 60, 140D, "2018-04-21");
+		Trade trade7 = new Trade("AAPL",TradeType.Sell, 20,150D, "2018-05-01");
+		Trade trade8 = new Trade("AAPL",TradeType.Sell, 20,120D, "2018-05-02");
+		Trade trade9 = new Trade("AMZN",TradeType.Sell, 80,1620D, "2018-05-03");
+		Trade trade10 = new Trade("AAPL",TradeType.Sell, 20,110D, "2018-05-05");
+		
+		transactions.add(trade1);
+		transactions.add(trade2);
+		transactions.add(trade3);
+		transactions.add(trade4);
+		transactions.add(trade5);
+		transactions.add(trade6);
+		transactions.add(trade7);
+		transactions.add(trade8);
+		transactions.add(trade9);
+		transactions.add(trade10);
+		
+		PnlInput pnlInput = new PnlInput(base, transactions);
+		List<PnlOutput> output = pnlCalculatorService.calculate( pnlInput );
+		Map<String, Integer> holdings1 = new HashMap<>();
+		holdings1.put("GOOGL", 30);
+		holdings1.put("AMZN", 0);
+		holdings1.put("AAPL", 0);
+		PnlOutput pnlOutput = new PnlOutput(120000D, 0D, holdings1);
+		assertEquals(pnlOutput, output.get(0));
+		
+		holdings1.put("GOOGL", 40);
+		pnlOutput = new PnlOutput(109000D, 0D, holdings1);
+		assertEquals(pnlOutput, output.get(1));
+		
+		holdings1.put("GOOGL", 0);
+		pnlOutput = new PnlOutput(157000D, 7000D, holdings1);
+		assertEquals(pnlOutput, output.get(2));
+		
+		holdings1.put("AMZN", 60);
+		pnlOutput = new PnlOutput(67000D, 7000D, holdings1);
+		assertEquals(pnlOutput, output.get(3));
+		
+		holdings1.put("AMZN", 80);
+		pnlOutput = new PnlOutput(36000D, 7000D, holdings1);
+		assertEquals(pnlOutput, output.get(4));
+		
+		holdings1.put("AAPL", 60);
+		pnlOutput = new PnlOutput(27600D, 7000D, holdings1);
+		assertEquals(pnlOutput, output.get(5));
+		
+		holdings1.put("AAPL", 40);
+		pnlOutput = new PnlOutput(30600D, 7200D, holdings1);
+		assertEquals(pnlOutput, output.get(6));
+		
+		holdings1.put("AAPL", 20);
+		pnlOutput = new PnlOutput(33000D, 6800D, holdings1);
+		assertEquals(pnlOutput, output.get(7));
+		
+		holdings1.put("AMZN", 0);
+		pnlOutput = new PnlOutput(162600D, 15400D, holdings1);
+		assertEquals(pnlOutput, output.get(8));
+		
+		holdings1.put("AAPL", 0);
+		pnlOutput = new PnlOutput(164800D, 14800D, holdings1);
+		assertEquals(pnlOutput, output.get(9));
+		
+	}
+
+
+}
