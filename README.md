@@ -21,4 +21,9 @@ HIT SEND
 see output body in JSON format
 
 
+Testing:
+
+Add JUNIT Jar & Run PnlCalculatorServiceTest at  com.omega.api.service
+
+
 
